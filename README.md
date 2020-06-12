@@ -84,7 +84,7 @@ Temporary test schemas will be created with names `TEST_1`, `TEST_2`, `TEST_3`, 
 
 ### Automated deployment
 
-To deploy schemas automatically using your database's REST API, run [deploy_to_cloud.sh](deploy_to_cloud.sh)
+To deploy the REST API automatically, run [deploy_to_cloud.sh](deploy_to_cloud.sh)
 ```bash
 ./deploy_to_cloud.sh -p my-admin-pass \
                      -a my-test_admin-pass \
