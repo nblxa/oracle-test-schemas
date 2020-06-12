@@ -1,10 +1,10 @@
 ## Summary
 
-This repository contains the scripts for setting up a REST API for quick provisioning of test
-schemas in your Oracle Cloud Autonomous Database.
+With this REST API you can quickly provision temporary test schemas in your Oracle Cloud Autonomous Database.
+Use the integrated deployment script to deploy the API on your database.
 
-The REST API will exposed by your database itself using [Oracle REST Data Services](https://www.oracle.com/database/technologies/appdev/rest.html) (ORDS).
-You may access it manually or from your CI environment.
+The REST API will be exposed by your database itself using [Oracle REST Data Services](https://www.oracle.com/database/technologies/appdev/rest.html)
+(ORDS). You may access it either manually or from your CI environment.
 
 It works with ['Always Free'](https://www.oracle.com/cloud/free/) Oracle Cloud Autonomous Databases.
 
@@ -20,7 +20,7 @@ It works with ['Always Free'](https://www.oracle.com/cloud/free/) Oracle Cloud A
 
 <tr>
 <td>
-https://<i>&lt;host&gt;</i>.oraclecloudapps.com/ords/test/schema/
+https://<i>&lt;host&gt;</i>/ords/test/schema/
 </td>
 <td>GET</td>
 <td>Get a list of currently available schemas.</td>
@@ -28,7 +28,7 @@ https://<i>&lt;host&gt;</i>.oraclecloudapps.com/ords/test/schema/
 
 <tr>
 <td>
-https://<i>&lt;host&gt;</i>.oraclecloudapps.com/ords/test/schema/
+https://<i>&lt;host&gt;</i>/ords/test/schema/
 </td>
 <td>POST</td>
 <td>
@@ -43,7 +43,7 @@ Create a new test schema.
 
 <tr>
 <td>
-https://<i>&lt;host&gt;</i>.oraclecloudapps.com/ords/test/schema/TEST_100500
+https://<i>&lt;host&gt;</i>/ords/test/schema/TEST_100500
 </td>
 <td>DELETE</td>
 <td>
@@ -56,7 +56,7 @@ Drop a test schema named `TEST_100500`.
 
 <tr>
 <td>
-https://<i>&lt;host&gt;</i>.oraclecloudapps.com/ords/test/log/
+https://<i>&lt;host&gt;</i>/ords/test/log/
 </td>
 <td>GET</td>
 <td>
@@ -72,15 +72,17 @@ Get a log of SQL statements performed by the API.
 
 ## Database Setup
 
-An Oracle Cloud Autonomous Database (either for Transaction Processing or Data Warehouse) is a pre-requisite.
+An Oracle Cloud Autonomous Database (either Transaction Processing or Data Warehouse) is a pre-requisite.
 These scripts may work with standalone Oracle Database installations, however additional configuration
 may be necessary.
 
-Two permanent database schemas will have to be set up:
+Two permanent database schemas are set up:
 * `TEST_ADMIN` contains the code for creating and dropping test schemas,
 * `TEST_REST` contains the REST API for accessing the code in `TEST_ADMIN`.
 
 Temporary test schemas will be created with names `TEST_1`, `TEST_2`, `TEST_3`, and so on.
+
+### Automated deployment
 
 To deploy schemas automatically using your database's REST API, run [deploy_to_cloud.sh](deploy_to_cloud.sh)
 ```bash
@@ -89,6 +91,8 @@ To deploy schemas automatically using your database's REST API, run [deploy_to_c
                      -r my-test_rest-pass \
                      my-db-host.adb.eu-frankfurt-1.oraclecloudapps.com
 ```
+
+### Manual deployment
 
 For a manual deployment, follow these steps:
 
@@ -103,3 +107,5 @@ For a manual deployment, follow these steps:
    in the previous step.
    
 3. As `TEST_REST`, execute the script [deploy_test_rest.sql](deploy_test_rest.sql).
+
+The above steps can also be performed using SQL Developer or any other database tool instead.
