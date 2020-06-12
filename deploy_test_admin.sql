@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2020 Pavel Mitrofanov
+ * MIT License
+ * More details at https://github.com/nblxa/oracle-test-schemas
+ *
+ * Execute this script as the ADMIN user.
+ */
+
 begin
   for r in (
     select t.username

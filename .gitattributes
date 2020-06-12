@@ -1,0 +1,7 @@
+*.sh           text=auto eol=lf
+*.sql          text=auto eol=lf
+*.md           text=auto eol=lf
+.gitignore     text=auto eol=lf
+.gitattributes text=auto eol=lf
+.editorconfig  text=auto eol=lf
+LICENSE        text=auto eol=lf
