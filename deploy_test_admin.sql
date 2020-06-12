@@ -137,7 +137,7 @@ as
     sys.dbms_scheduler.create_job(
       job_name   => 'test_admin.drop_' || v_schema_name
     , job_type   => 'plsql_block'
-    , job_action => 'begin test_admin.schema_mgmt.drop_test_schema(''' || v_schema_name || '''); end;'
+    , job_action => 'declare v boolean; begin test_admin.schema_mgmt.drop_test_schema(''' || v_schema_name || ''', v); end;'
     , start_date => v_drop_ts
     , enabled    => true
     , auto_drop  => true
