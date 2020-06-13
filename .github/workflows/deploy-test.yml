@@ -33,4 +33,10 @@ jobs:
 
       # Runs a single command using the runners shell
       - name: Run tests
+        shell: bash
         run: find "$GITHUB_WORKSPACE/test" -name '*.bats' | xargs bats
+        env:
+          OC_ADMIN_PWD: ${{ secrets.OC_ADMIN_PWD }}
+          OC_TEST_ADMIN_PWD: ${{ secrets.OC_TEST_ADMIN_PWD }}
+          OC_TEST_REST_PWD: ${{ secrets.OC_TEST_REST_PWD }}
+          OC_HOST_NAME: ${{ secrets.OC_HOST_NAME }}
