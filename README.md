@@ -1,3 +1,5 @@
+![CI](https://github.com/nblxa/oracle-test-schemas/workflows/CI/badge.svg)
+
 ## Summary
 
 With this REST API you can quickly provision temporary test schemas in your Oracle Cloud Autonomous Database.
