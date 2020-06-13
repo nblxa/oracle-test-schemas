@@ -25,9 +25,6 @@ jobs:
         with:
           bats-version: 1.1.0
 
-      - name: Install JQ
-        run: sudo apt-get install jq
-
       # Checks-out the repository under $GITHUB_WORKSPACE
       - uses: actions/checkout@v2
 
