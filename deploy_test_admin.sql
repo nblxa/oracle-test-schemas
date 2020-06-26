@@ -239,11 +239,11 @@ create user test_rest identified by &TEST_REST_PASSWORD;
 grant connect to test_rest;
 
 grant execute on test_admin.schema_mgmt to test_rest;
-
 grant select on test_admin.schema_log to test_rest;
 grant select on test_admin.test_schema to test_rest;
 
 begin
+  ords.drop_rest_for_schema('TEST_REST');
   ords.enable_schema(
     p_enabled             => true
   , p_schema              => 'TEST_REST'
