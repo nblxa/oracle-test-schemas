@@ -14,7 +14,7 @@ HOST is the fully-qualified hostname of the Oracle Database,
      e.g. my-host-name.adb.eu-frankfurt-1.oraclecloudapps.com
 Options are:
   -p    ADMIN user password
-  -n    NAMESPACE. The default is "TEST". Oracle schema names will start with the namespace
+  -n    Namespace. The default is "TEST". Oracle schema names will start with the namespace
         in uppercase, e.g.: TEST_ADMIN, TEST_REST, and temporary schemas TEST_1, TEST_2, etc.
         The REST endpoints will contain the namespace in lowercase,
         e.g. https://example.com/ords/test/

@@ -88,13 +88,13 @@ Create a new test schema.
 <tr>
 <td>
 
-https://`host`/ords/`namespace`/schema/`id`
+https://`host`/ords/`namespace`/schema/`name`
 
 </td>
 <td>DELETE</td>
 <td>
 
-Drop a test schema with the ID `id`.
+Drop a test schema identified by `name`.
 <br />Only test schemas created by the API can be dropped using this service.
 
 </td>
