@@ -128,12 +128,15 @@ Two permanent database schemas are set up:
 
 Temporary test schemas will be created with names `TEST_1`, `TEST_2`, `TEST_3`, and so on.
 
+Note that schema name prefix (namespace) can be configured during the deployment.
+The default namespace is `TEST`.
+
 ### Automated deployment
 
 To deploy the REST API automatically, run [deploy_to_cloud.sh](deploy_to_cloud.sh)
 ```bash
 ./deploy_to_cloud.sh -p my-admin-pass \
-                     -n autotest \
+                     -n test \
                      -a my-test_admin-pass \
                      -r my-test_rest-pass \
                      my-db-host.adb.eu-frankfurt-1.oraclecloudapps.com
