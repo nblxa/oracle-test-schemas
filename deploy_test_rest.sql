@@ -6,6 +6,12 @@
  * Execute this script as the TEST_REST user.
  */
 
+define TEST_ADMIN_NAME=&NAMESPACE._ADMIN
+define TEST_REST_NAME=&NAMESPACE._REST
+
+select sys.dbms_assert.simple_sql_name('&TEST_ADMIN_NAME') test_admin from dual;
+select sys.dbms_assert.simple_sql_name('&TEST_REST_NAME') test_rest from dual;
+
 begin
   for r in (select t.name from user_ords_modules t)
   loop
@@ -24,6 +30,24 @@ begin
     ords.delete_role(r.name);
   end loop;
   ords.define_module(
+    p_module_name => 'test_version'
+  , p_base_path   => 'version/'
+  );
+  ords.define_template(
+    p_module_name => 'test_version'
+  , p_pattern     => '.'
+  );
+  ords.define_handler(
+    p_module_name => 'test_version'
+  , p_pattern     => '.'
+  , p_method      => 'GET'
+  , p_source_type => ords.source_type_collection_item
+  , p_source      => '
+      SELECT &TEST_ADMIN_NAME..schema_mgmt.get_version AS version
+      FROM dual
+    '
+  );
+  ords.define_module(
     p_module_name => 'test_log'
   , p_base_path   => 'log/'
   );
@@ -38,7 +62,7 @@ begin
   , p_source_type => ords.source_type_collection_feed
   , p_source      => '
       SELECT t.*
-      FROM test_admin.schema_log t
+      FROM &TEST_ADMIN_NAME..schema_log t
       ORDER BY t.log_id DESC
     '
   );
@@ -61,9 +85,9 @@ begin
   , p_source_type   => ords.source_type_plsql
   , p_source        => '
       declare
-        v_schema_name test_admin.test_schema.schema_name%type;
+        v_schema_name &TEST_ADMIN_NAME..test_schema.schema_name%type;
       begin
-        test_admin.schema_mgmt.create_test_schema(
+        &TEST_ADMIN_NAME..schema_mgmt.create_test_schema(
           in_drop_timeout_min => :timeout
         , in_password         => :password
         , out_schema_name     => v_schema_name
@@ -80,7 +104,7 @@ begin
   , p_source_type => ords.source_type_collection_feed
   , p_source      => '
       SELECT t.*
-      FROM test_admin.test_schema t
+      FROM &TEST_ADMIN_NAME..test_schema t
       ORDER BY t.schema_id DESC
     '
   );
@@ -95,7 +119,7 @@ begin
   , p_source_type => ords.source_type_collection_item
   , p_source      => '
       SELECT t.*
-      FROM test_admin.test_schema t
+      FROM &TEST_ADMIN_NAME..test_schema t
       WHERE t.schema_name = :name
       ORDER BY t.schema_id DESC
     '
@@ -109,7 +133,7 @@ begin
       declare
         v_dropped boolean;
       begin
-        test_admin.schema_mgmt.drop_test_schema(
+        &TEST_ADMIN_NAME..schema_mgmt.drop_test_schema(
           in_schema_name => :name
         , out_dropped    => v_dropped
         );
@@ -120,6 +144,26 @@ begin
     '
   );
   ords.create_role('ci');
+  declare
+    v_roles owa.vc_arr;
+    v_patterns owa.vc_arr;
+    v_modules owa.vc_arr;
+  begin
+    v_roles(1) := 'ci';
+    v_modules(1) := 'test_version';
+    ords.define_privilege(
+      p_privilege_name => 'test.version.privilege'
+    , p_roles          => v_roles
+    , p_patterns       => v_patterns
+    , p_modules        => v_modules
+    , p_label          => 'Read the version'
+    , p_description    => 'Allows accessing the version.'
+    , p_comments       => null
+    );
+  end;
+  ords.create_privilege_mapping(
+    p_privilege_name => 'test.version.privilege'
+  , p_pattern        => '/version/*');
   declare
     v_roles owa.vc_arr;
     v_patterns owa.vc_arr;

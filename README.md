@@ -12,7 +12,45 @@ It works with ['Always Free'](https://www.oracle.com/cloud/free/) Oracle Cloud A
 
 ## API overview
 
-\<host\> is your database hostname.
+* `host` is your database hostname.
+* `namespace` is the part of the REST URL that points to the instance of the API.
+
+### Authentication
+
+All endpoints are secured with OAuth. Before issuing requests, the client has to authenticate using
+Basic authentication at the URL:
+
+https://`host`/ords/`namespace`/oauth/token
+
+Client credentials `client_id` and `client_secret` are provided at the end of the deployment script.
+
+Here's an example `curl` command for authentication:
+
+```bash
+curl -X POST 'https://my-db-host.adb.eu-frankfurt-1.oraclecloudapps.com/ords/test/oauth/token' \
+     -u "EQkYf40Dx-qzgp5elWG8qQ..:yH709ffOhCfW8fcSxtSN8Q.." \
+     -H 'Content-Type: application/x-www-form-urlencoded' \
+     --data-urlencode 'grant_type=client_credentials'
+```
+
+The response will contain a JSON document with a bearer token:
+
+```json
+{
+  "access_token": "MBy1KJTL-GSTMWU-uHylLQ",
+  "token_type": "bearer",
+  "expires_in": 3600
+}
+```
+
+Use the value of `access_token` in your requests by providing it in the `Authorization` header:
+
+```bash
+curl -X GET 'https://my-db-host.adb.eu-frankfurt-1.oraclecloudapps.com/ords/test/log/' \
+     -H 'Authorization: Bearer MBy1KJTL-GSTMWU-uHylLQ'
+```
+
+### Endpoints
 
 <table>
 <thead>
@@ -22,7 +60,9 @@ It works with ['Always Free'](https://www.oracle.com/cloud/free/) Oracle Cloud A
 
 <tr>
 <td>
-https://<i>&lt;host&gt;</i>/ords/test/schema/
+
+https://`host`/ords/`namespace`/schema/
+
 </td>
 <td>GET</td>
 <td>Get a list of currently available schemas.</td>
@@ -30,7 +70,9 @@ https://<i>&lt;host&gt;</i>/ords/test/schema/
 
 <tr>
 <td>
-https://<i>&lt;host&gt;</i>/ords/test/schema/
+
+https://`host`/ords/`namespace`/schema/
+
 </td>
 <td>POST</td>
 <td>
@@ -45,12 +87,14 @@ Create a new test schema.
 
 <tr>
 <td>
-https://<i>&lt;host&gt;</i>/ords/test/schema/TEST_100500
+
+https://`host`/ords/`namespace`/schema/`id`
+
 </td>
 <td>DELETE</td>
 <td>
 
-Drop a test schema named `TEST_100500`.
+Drop a test schema with the ID `id`.
 <br />Only test schemas created by the API can be dropped using this service.
 
 </td>
@@ -89,10 +133,13 @@ Temporary test schemas will be created with names `TEST_1`, `TEST_2`, `TEST_3`, 
 To deploy the REST API automatically, run [deploy_to_cloud.sh](deploy_to_cloud.sh)
 ```bash
 ./deploy_to_cloud.sh -p my-admin-pass \
+                     -n autotest \
                      -a my-test_admin-pass \
                      -r my-test_rest-pass \
                      my-db-host.adb.eu-frankfurt-1.oraclecloudapps.com
 ```
+
+At the end you will see `client_id` and `client_secret` to be used for authentication with OAuth.
 
 ### Manual deployment
 
